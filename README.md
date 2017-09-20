@@ -1,7 +1,7 @@
 # ms_apint
 tileset painter
 
-!(https://raw.githubusercontent.com/free-ghz/ms_apint/master/screenyshot.png "screenshot")
+![alt text](https://raw.githubusercontent.com/free-ghz/ms_apint/master/screenyshot.png "screenshot")
 
 # download
 https://sixey.es/20494/ms_apint.jar
