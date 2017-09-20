@@ -18,7 +18,6 @@ public class Minimap extends GridPane {
 	}
 	
 	public void Draw() {
-		System.out.println("minimap draw");
 		this.getChildren().clear();
 		for (int x = 0; x < grid.getWidth(); x++) {
 			for (int y = 0; y < grid.getHeight(); y++) {

@@ -6,10 +6,12 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
@@ -27,7 +29,12 @@ public class Main extends Application {
     
     @Override
     public void start(Stage primaryStage){
+    	// some looks
 	    Pane root = new Pane();
+	    root.setStyle("-fx-background-color: #fff");
+	    Image frame = new Image("franme.png");
+	    ImageView paintBorder = new ImageView(frame);
+	    root.getChildren().add(paintBorder);
 	    
     	// set up tileset
 	    Image tileImage = new Image("tileset.png");
@@ -36,21 +43,21 @@ public class Main extends Application {
 	    // set up tileset view
 	    GridView tilesetView = new GridView(tileset, 3);
 	    root.getChildren().add(tilesetView);
-	    tilesetView.setTranslateX(652);
-	    tilesetView.setTranslateY(20);
+	    tilesetView.setTranslateX(666);
+	    tilesetView.setTranslateY(18);
 	    
 	    // set up painting pane
 	    Painting painting = new Painting(34,15, tileset.getTile(0,0));
 	    GridView paintingView = new GridView(painting, 3);
 	    root.getChildren().add(paintingView);
-	    paintingView.setTranslateX(20);
-	    paintingView.setTranslateY(20);
+	    paintingView.setTranslateX(18);
+	    paintingView.setTranslateY(18);
 	    
 	    // set up little one
 	    Minimap minimap = new Minimap(painting);
 	    root.getChildren().add(minimap);
 	    minimap.setTranslateX(20);
-	    minimap.setTranslateY(310);
+	    minimap.setTranslateY(324);
 	    
 	    // a little helper text
 	    Label help = new Label();
@@ -72,7 +79,7 @@ public class Main extends Application {
 	    root.getChildren().add(info);
 	    
 	    // make a program view
-	    Scene scene = new Scene(root, 942,400); // 942 x 310
+	    Scene scene = new Scene(root, 936,414); // 942 x 310
 	    primaryStage.setResizable(false);
 	    primaryStage.setTitle("ms apint 32");
 	    primaryStage.setScene(scene);
@@ -96,10 +103,6 @@ public class Main extends Application {
 					if (event.getCode() == KeyCode.DOWN) {
 						tileset.selDown();
 					}
-					painting.setTile(painting.getSelX(), painting.getSelY(), tileset.getTile(tileset.getSelX(), tileset.getSelY()));
-					painting.setTilesetPos(tileset.getSelX(), tileset.getSelY());
-					int[] k = {tileset.getSelX(), tileset.getSelY()};
-					savedKey.save(k);
 					
 					
 				} else if (event.isShiftDown()) {
@@ -129,7 +132,7 @@ public class Main extends Application {
 						painting.selDown();
 					}
 				}
-			    if (event.isAltDown() || event.getCode() == KeyCode.ENTER) {
+			    if (event.isControlDown() || event.isAltDown() || event.getCode() == KeyCode.ENTER) {
 				    painting.setTile(painting.getSelX(), painting.getSelY(), tileset.getTile(tileset.getSelX(), tileset.getSelY()));
 				    painting.setTilesetPos(tileset.getSelX(), tileset.getSelY());
 				    int[] k = {tileset.getSelX(), tileset.getSelY()};
