@@ -23,6 +23,11 @@ public class Main extends Application {
 	
 	Tileset tileset;
 	
+	// keypress flags
+	boolean pressed_z = false;
+	boolean pressed_x = false;
+	boolean pressed_c = false;
+	
     public static void main(String[] args) {
         launch(args);
     }
@@ -63,7 +68,7 @@ public class Main extends Application {
 	    Label help = new Label();
 	    help.setPrefWidth(290);
 	    help.setPrefHeight(94);
-	    help.setText("ARROWS navigate image\nCTRL+ARROWS navigate the tileset\nSHIFT+ARROWS shifts the image\nALT+ARROWS draws a line\nSPACE saves png");
+	    help.setText("ARROWS navigate image\nC+ARROWS navigate the tileset\nZ+ARROWS shifts the image\nX+ARROWS draws a line\nCTRL+S saves png");
 	    help.setTranslateX(652);
 	    help.setTranslateY(310);
 	    help.setAlignment(Pos.TOP_LEFT);
@@ -71,7 +76,7 @@ public class Main extends Application {
 	    Label info = new Label();
 	    info.setPrefWidth(290);
 	    info.setPrefHeight(94);
-	    info.setText("ms apint 32 -- sixey.es/20494\n0.2 -> added ctrl, alt and shift stuff\n0.1 -> created the thing. booya");
+	    info.setText("ms apint 32 -- sixey.es/20494\n0.3 -> new keybindings + frame\n0.2 -> added ctrl, alt and shift stuff\n0.1 -> created the thing. booya");
 	    info.setTranslateX(342);
 	    info.setTranslateY(310);
 	    info.setTextAlignment(TextAlignment.RIGHT);
@@ -86,11 +91,47 @@ public class Main extends Application {
 	    primaryStage.show();
 	
 		Saver savedKey = new Saver();
+	    scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+		
+              @Override
+              public void handle(KeyEvent event) {
+	              // check for release of our good friends z, x or c
+	              if (event.getCode() == KeyCode.C) {
+		              pressed_c = false;
+	              }
+	              if (event.getCode() == KeyCode.X) {
+		              pressed_x = false;
+	              }
+	              if (event.getCode() == KeyCode.Z) {
+		              pressed_z = false;
+	              }
+              }
+	    });
 	    scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 		
 		    @Override
 		    public void handle(KeyEvent event) {
-				if (event.isControlDown()) {
+		    	
+		    	// saving, etc
+		    	if (event.isControlDown()) {
+				    if (event.getCode() == KeyCode.S) {
+					    saveImage(minimap);
+				    }
+			    }
+			    
+		    	// check for our good friends z, x or c
+			    if (event.getCode() == KeyCode.C) {
+			    	pressed_c = true;
+			    }
+			    if (event.getCode() == KeyCode.X) {
+			    	pressed_x = true;
+			    }
+			    if (event.getCode() == KeyCode.Z) {
+			    	pressed_z = true;
+			    }
+			    
+			    // change tileset tile
+				if (pressed_c) {
 					if (event.getCode() == KeyCode.LEFT) {
 						tileset.selLeft();
 					}
@@ -104,8 +145,8 @@ public class Main extends Application {
 						tileset.selDown();
 					}
 					
-					
-				} else if (event.isShiftDown()) {
+				// shift the whole image around
+				} else if (pressed_z) {
 					if (event.getCode() == KeyCode.LEFT) {
 						painting.rotateLeft();
 					}
@@ -118,6 +159,8 @@ public class Main extends Application {
 					if (event.getCode() == KeyCode.DOWN) {
 						painting.rotateDown();
 					}
+					
+				// move around in painting
 				} else {
 					if (event.getCode() == KeyCode.LEFT) {
 						painting.selLeft();
@@ -132,24 +175,28 @@ public class Main extends Application {
 						painting.selDown();
 					}
 				}
-			    if (event.isControlDown() || event.isAltDown() || event.getCode() == KeyCode.ENTER) {
+				
+				// place a tile under some conditions,
+			    // and also get new "saved tile"
+			    if (pressed_c || pressed_x) {
 				    painting.setTile(painting.getSelX(), painting.getSelY(), tileset.getTile(tileset.getSelX(), tileset.getSelY()));
 				    painting.setTilesetPos(tileset.getSelX(), tileset.getSelY());
 				    int[] k = {tileset.getSelX(), tileset.getSelY()};
 				    savedKey.save(k);
 			    }
+			    
+			    // save or whatever i forgot
 			    int[] t = painting.getTilesetPos();
 			    if (t[0] == -1 || t[1] == -1) {
 				    tileset.setSel(savedKey.getX(), savedKey.getY());
 			    } else {
 				    tileset.setSel(t[0], t[1]);
 			    }
+			    
+			    // update views
 			    paintingView.Draw();
 			    tilesetView.Draw();
 			    minimap.Draw();
-			    if (event.getCode() == KeyCode.SPACE) {
-			    	saveImage(minimap);
-			    }
 		    }
 	    });
     }
