@@ -13,8 +13,11 @@ you can change tileset.png in the .jar but it has to be 15x15 tiles of 6x6 size
 * c+arrows -> move around tileset, changing the tile in the image  
 * x+arrows -> draw a line in the image  
 * z+arrow -> shift the whole image  
-* ctrl+s -> save (will move this one) 
+* ctrl+n -> clear (no confirmation!!!!)
+* ctrl+s -> save
+* ctrl+o -> load
+* ctrl+e -> export to png
 
 # todo
-* saving/loading native format (so you can continue later)
-* swapping tilesets maybe
+* switch tileset
+* idk something cool
